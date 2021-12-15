@@ -1,0 +1,11 @@
+# [Files]
+*.o
+*.d
+.DS_Store
+a.out
+*.ignore
+
+
+# [Directories]
+bin/
+.vsscode/
