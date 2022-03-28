@@ -3,8 +3,17 @@
 ################################################################################
 
 # Makefile by fletcher97
-# Version: 2.3
+# Version: 2.4
 # Repo: www.github.com/fletcher97/utils
+
+# v2.4: Added PEDANTIC variable on configs section. If set to true a lot of
+# warning flags will be added to use while compiling. By default this feature is
+# turned on. Setting the variable to anything else will disable extra warnings.
+# Turning it off will still compile with -Wall -Wextra -Werror.
+#
+# A LANG variable was aslo added to to specify what language the program is
+# using so as to be able to detect the extentions of the files (not implemented)
+# and enable more warnings.
 
 # v2.3: A rule to check if a program can be compiled was added in other to be
 # used for git hooks. A folder with hooks can be found in the same repository
@@ -16,7 +25,7 @@
 
 # This makefile can be copied to a directory and it will generate the file
 # structure and initialize a git repository with the .init rule. Any variables
-# and rules for the specifique project can be added in the appropriate section.
+# and rules for the specific project can be added in the appropriate section.
 
 # By default this makefile assumes that libft, 42's student made library, a copy
 # of which can be obtained by cloning https://github.com/fletcher97/libft.git,
@@ -57,15 +66,52 @@ VERBOSE := 1
 # creation of these targets by setting the bellow variable to 0.
 CREATE_LIB_TARGETS := 1
 
+# Pedantic allows for extra warning flags to be used while compiling. If set to
+# true these flags are applied. If set to anything else the flags will not be
+# used. By default it's turned on.
+PEDANTIC := true
+
+# Specify the language use by your program. This will allow to detect file
+# extentions automatically (not implemented). It also allows fo warnings to be
+# activated/deactivated based on the language used.
+LANG := C++
+
 ################################################################################
 # Compiler & Flags
 ################################################################################
 
 # Compiler
-CC := clang++
+ifeq (${LANG},C)
+	CC := clang
+else ifeq (${LANG},C++)
+	CC := clang++
+endif
 
 # Compiler flags
-CFLAGS := -Wall -Wextra -Werror -Wvla
+CFLAGS := -Wall -Wextra -Werror
+ifeq (${LANG},C++)
+	CFLAGS += -std=c++98
+endif
+
+# Pedantic flags
+ifeq (${PEDANTIC},true)
+	CFLAGS += -Wpedantic -Werror=pedantic -pedantic-errors -Wcast-align
+	CFLAGS += -Wcast-qual -Wdisabled-optimization -Wformat=2 -Wuninitialized
+	CFLAGS += -Winit-self -Wmissing-include-dirs -Wredundant-decls -Wshadow
+	CFLAGS += -Wstrict-overflow=5 -Wundef -fdiagnostics-show-option
+	CFLAGS += -fstack-protector-all -fstack-clash-protection
+	ifeq (${CC},gcc)
+		CFLAGS += -Wformat-signedness -Wformat-truncation=2 -Wformat-overflow=2
+		CFLAGS += -Wlogical-op -Wstringop-overflow=4
+	endif
+	ifeq (${LANG},C++)
+		CFLAGS += -Wctor-dtor-privacy -Wold-style-cast -Woverloaded-virtual
+		CFLAGS += -Wsign-promo
+		ifeq (${CC},gcc)
+			CFLAGS += -Wstrict-null-sentinel -Wnoexcept
+		endif
+	endif
+endif
 
 # Generic debug flags
 DFLAGS := -g
@@ -157,13 +203,22 @@ INC_DIRS += ${INC_ROOT}
 # Files
 ################################################################################
 
-SRCS_LIST = $(foreach dl,${SRC_DIRS_LIST},$(subst ${SPACE},:,$(strip $(foreach\
-	dir,$(subst :,${SPACE},${dl}),$(wildcard ${dir}*.cpp)))))
-OBJS_LIST = $(subst ${SRC_ROOT},${OBJ_ROOT},$(subst .cpp,.o,${SRCS_LIST}))
+ifeq (${LANG},C)
+	SRC_FILE_EXT := c
+	INC_FILE_EXT := h
+else ifeq (${LANG},C++)
+	SRC_FILE_EXT := cpp
+	INC_FILE_EXT := hpp
+endif
 
-SRCS = $(foreach dir,${SRC_DIRS},$(wildcard ${dir}*.cpp))
-OBJS = $(subst ${SRC_ROOT},${OBJ_ROOT},${SRCS:.cpp=.o})
-DEPS = $(subst ${SRC_ROOT},${DEP_ROOT},${SRCS:.cpp=.d})
+SRCS_LIST = $(foreach dl,${SRC_DIRS_LIST},$(subst ${SPACE},:,$(strip $(foreach\
+	dir,$(subst :,${SPACE},${dl}),$(wildcard ${dir}*.${SRC_FILE_EXT})))))
+OBJS_LIST = $(subst ${SRC_ROOT},${OBJ_ROOT},\
+	$(subst .${SRC_FILE_EXT},.o,${SRCS_LIST}))
+
+SRCS = $(foreach dir,${SRC_DIRS},$(wildcard ${dir}*.${SRC_FILE_EXT}))
+OBJS = $(subst ${SRC_ROOT},${OBJ_ROOT},${SRCS:.${SRC_FILE_EXT}=.o})
+DEPS = $(subst ${SRC_ROOT},${DEP_ROOT},${SRCS:.${SRC_FILE_EXT}=.d})
 
 INCS := ${addprefix -I,${INC_DIRS}}
 
@@ -199,8 +254,8 @@ endif
 ################################################################################
 
 vpath %.o $(OBJ_ROOT)
-vpath %.h $(INC_ROOT)
-vpath %.cpp $(SRC_DIRS)
+vpath %.${INC_FILE_EXT} $(INC_ROOT)
+vpath %.${SRC_FILE_EXT} $(SRC_DIRS)
 vpath %.d $(DEP_DIRS)
 
 ################################################################################
@@ -405,12 +460,12 @@ $(call make_bin_def,$(notdir ${bin}),${bin})))
 endif
 
 $(foreach src,${SRCS},$(eval\
-$(call make_dep_def,$(subst ${SRC_ROOT},${DEP_ROOT},${src:.cpp=.d}),${src})))
+$(call make_dep_def,$(subst ${SRC_ROOT},${DEP_ROOT},${src:.${SRC_FILE_EXT}=.d}),${src})))
 
 $(foreach src,${SRCS},$(eval\
-$(call make_obj_def,$(subst ${SRC_ROOT},${OBJ_ROOT},${src:.cpp=.o}),\
-${src},\
-$(subst ${SRC_ROOT},${DEP_ROOT},${src:.cpp=.d}))))
+$(call make_obj_def,$(subst ${SRC_ROOT},${OBJ_ROOT},\
+${src:.${SRC_FILE_EXT}=.o}),${src},\
+$(subst ${SRC_ROOT},${DEP_ROOT},${src:.${SRC_FILE_EXT}=.d}))))
 
 $(foreach lib,${DEFAULT_LIBS},$(foreach target,${DEFAULT_LIB_RULES},$(eval\
 $(call make_lib_def,${lib},${target}))))

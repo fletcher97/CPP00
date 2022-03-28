@@ -6,11 +6,12 @@
 /*   By: mgueifao <mgueifao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 03:05:27 by mgueifao          #+#    #+#             */
-/*   Updated: 2021/12/15 03:05:28 by mgueifao         ###   ########.fr       */
+/*   Updated: 2022/03/28 21:32:32 by mgueifao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
+#include <charconv>
 
 int main(int argc, char const *argv[])
 {
@@ -22,8 +23,7 @@ int main(int argc, char const *argv[])
 		{
 			const char *s = argv[i];
 			for (int j = 0; s[j]; j++)
-				std::cout << (char)toupper(s[j]);
-			std::cout << " ";
+				std::cout << static_cast<char>(toupper(s[j]));
 		}
 		std::cout << std::endl;
 	}
