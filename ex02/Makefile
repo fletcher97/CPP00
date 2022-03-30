@@ -64,7 +64,7 @@ VERBOSE := 1
 # in others. If for example you just want to clean the root directory the clean
 # rule will be executed in any other makefile specified. You can deactivate the
 # creation of these targets by setting the bellow variable to 0.
-CREATE_LIB_TARGETS := 1
+CREATE_LIB_TARGETS := 0
 
 # Pedantic allows for extra warning flags to be used while compiling. If set to
 # true these flags are applied. If set to anything else the flags will not be
@@ -245,9 +245,9 @@ else ifeq ($(VERBOSE),4)
 	MAKEFLAGS += --debug=v
 endif
 
-ifeq (${CREATE_LIB_TARGETS},0)
-	undefine DEFAULT_LIBS
-endif
+# ifeq (${CREATE_LIB_TARGETS},0)
+# 	undefine DEFAULT_LIBS
+# endif
 
 ################################################################################
 # VPATHS
@@ -265,7 +265,7 @@ vpath %.d $(DEP_DIRS)
 all: ${BINS}
 
 .SECONDEXPANSION:
-${BIN_ROOT}${NAME1}: ${LIBFT} $$(call get_files,$${@F},$${OBJS_LIST})
+${BIN_ROOT}${NAME1}: $$(call get_files,$${@F},$${OBJS_LIST})
 	${AT}printf "\033[33m[CREATING ${@F}]\033[0m\n" ${BLOCK}
 	${AT}mkdir -p ${@D} ${BLOCK}
 	${AT}${CC} ${CFLAGS} ${INCS} ${ASAN_FILE}\
