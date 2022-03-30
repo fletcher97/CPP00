@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Contact.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgueifao <mgueifao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fletcher <fletcher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 04:31:11 by mgueifao          #+#    #+#             */
-/*   Updated: 2022/03/28 22:40:41 by mgueifao         ###   ########.fr       */
+/*   Updated: 2022/03/30 12:13:08 by fletcher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 #include <Contact.hpp>
 #include <utils.hpp>
 
-Contact::Contact(string fn, string ln, string nn, string num, string secret){
+Contact::Contact(string fn, string ln, string nn, string num, string sec){
 	this->firstName = fn;
 	this->lastName = ln;
 	this->nickName = nn;
 	this->number = num;
-	this->secret = secret;
+	this->secret = sec;
 	this->empty = false;
 }
 

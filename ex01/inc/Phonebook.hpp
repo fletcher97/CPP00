@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Phonebook.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgueifao <mgueifao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fletcher <fletcher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 03:21:09 by mgueifao          #+#    #+#             */
-/*   Updated: 2022/03/28 22:17:03 by mgueifao         ###   ########.fr       */
+/*   Updated: 2022/03/30 12:19:39 by fletcher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ public:
 	void printBook();
 	void printContact(int i);
 	bool checkIndex(int i);
+	int getSize();
 };
 
 #endif // PHONEBOOK_H

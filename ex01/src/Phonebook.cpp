@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Phonebook.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgueifao <mgueifao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fletcher <fletcher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 03:21:19 by mgueifao          #+#    #+#             */
-/*   Updated: 2022/03/28 22:43:13 by mgueifao         ###   ########.fr       */
+/*   Updated: 2022/03/30 12:22:55 by fletcher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void Phonebook::add(string fn, string ln, string nn, string num, string secret)
 	this->list[this->next].setNickName(nn);
 	this->list[this->next].setNumber(num);
 	this->list[this->next].setSecret(secret);
-	this->next = (this->next + 1) % 8;
+	this->next = (this->next + 1) % MAX_BOOK_SIZE;
 }
 
 void Phonebook::printBook(){
@@ -44,4 +44,11 @@ void Phonebook::printContact(int i){
 
 bool Phonebook::checkIndex(int i){
 	return i >= 0 && i < MAX_BOOK_SIZE && !this->list[i].isEmpty();
+}
+
+int Phonebook::getSize() {
+	if (this->list[this->next].isEmpty())
+		return this->next;
+	else
+		return MAX_BOOK_SIZE;
 }

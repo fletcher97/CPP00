@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgueifao <mgueifao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fletcher <fletcher@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 04:09:31 by mgueifao          #+#    #+#             */
-/*   Updated: 2022/03/28 22:47:24 by mgueifao         ###   ########.fr       */
+/*   Updated: 2022/03/30 12:24:44 by fletcher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,10 @@ int main(int argc, char const *argv[])
 			add(&book);
 		else if (!in.compare("SEARCH"))
 		{
+			if (book.getSize() == 0) {
+				std::cout << "No contacts on your phonebook\n";
+				continue;
+			}
 			book.printBook();
 			in = read("Please insert the contact's index (enter nothing to cancel this operation):");
 			if (!in.compare(""))
