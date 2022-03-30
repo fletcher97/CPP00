@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Account.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fletcher <fletcher@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mgueifao <mgueifao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 12:48:55 by fletcher          #+#    #+#             */
-/*   Updated: 2022/03/30 17:12:46 by fletcher         ###   ########.fr       */
+/*   Updated: 2022/03/30 20:08:02 by mgueifao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,12 @@ Account::~Account(){
 }
 
 void Account::makeDeposit(int dep) {
+	_displayTimestamp();
 	this->_amount += dep;
 	this->_nbDeposits++;
 	_totalAmount += dep;
 	_totalNbDeposits++;
+	std::cout << " index:" << this->_accountIndex << ";p_amount:" << this->_amount - dep << ";deposit:" << dep << ";amount:" << this->_amount << ";nb_deposits:" << this->_nbDeposits << std::endl;
 }
 
 Account::Account(int init_dep) {
@@ -59,12 +61,17 @@ Account::Account(int init_dep) {
 }
 
 bool Account::makeWithdrawal(int dep) {
-	if (this->_amount > dep)
+	_displayTimestamp();
+	std::cout << " index:" << this->_accountIndex << ";p_amount:" << this->_amount << ";withdrawal:";
+	if (this->_amount < dep) {
+		std::cout << "refused\n";
 		return false;
+	}
 	this->_amount -= dep;
 	this->_nbWithdrawals++;
 	_totalAmount -= dep;
 	_totalNbWithdrawals++;
+	std::cout << dep << ";amount:" << this->_amount << ";nb_withdrawals:" << this->_nbWithdrawals << std::endl;
 	return true;
 }
 
@@ -74,7 +81,6 @@ int Account::checkAmount() const {
 
 void Account::displayAccountsInfos(){
 	_displayTimestamp();
-	//accounts:8;total:12442;deposits:8;withdrawals:6
 	std::cout << " accounts:" << _nbAccounts << ";total:" << _totalAmount << ";deposits:" << _totalNbDeposits << ";withdrawals:" << _totalNbWithdrawals << std::endl;
 }
 
